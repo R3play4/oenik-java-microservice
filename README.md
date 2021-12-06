@@ -1,4 +1,4 @@
-# 1 Étlap és Itallap
+# Étlap és Itallap
 
 Listába szervezve tároljuk az éppen elérhető ételeket és italokat.
 Mindegyik csak egyszer szerepelhet a listában.
