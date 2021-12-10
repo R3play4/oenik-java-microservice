@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Service;
 
+import lombok.Builder;
+
+@Service
 public class FoodRepository {
     private static final List<Food> foodList = new ArrayList<>();
 
