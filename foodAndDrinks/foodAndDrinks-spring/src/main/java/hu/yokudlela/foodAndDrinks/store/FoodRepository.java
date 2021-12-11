@@ -11,10 +11,20 @@ import org.springframework.stereotype.Service;
 
 import lombok.Builder;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class FoodRepository {
     private static final List<Food> foodList = new ArrayList<>();
 
+    @PostConstruct
+    public void init(){
+        foodList.add(Food.builder()
+                .name("teszt")
+                .description("csak egy kaja")
+                .price(2440)
+                .build());
+    }
     /**
      * Étel lekérdezés név alapján
      * @param name étel egyedi neve
