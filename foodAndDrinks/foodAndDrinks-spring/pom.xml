@@ -61,10 +61,47 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>hu.yokudlela.table.spring.TableApplication</mainClass>
+                            <mainClass>hu.yokudlela.foodAndDrinks.spring.FoodAndDrinksApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>4.4.1</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>food-and-drink</name>
+                            <build>
+                                <dockerFileDir>${project.basedir}/src/main/resources/docker/</dockerFileDir>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <tags>
+                                    <tag>food-and-drinks-latest</tag>
+                                    <tag>food-and-drinks-1.0</tag>
+                                </tags>
+                                <assemply>
+                                    <inline>
+                                        <files>
+                                            <file>
+                                                <source>${project.build.directory}/foodAndDrinks-spring.jar</source>
+                                                <outputDirectory>./opt</outputDirectory>
+                                                <destName>foodAndDrinks.jar</destName>
+                                            </file>
+                                        </files>
+                                    </inline>
+                                </assemply>
+                            </build>
+                        </image>
+                    </images>
+                    <authConfig>
+                        <username>user</username>
+                        <password>password</password>
+                    </authConfig>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
