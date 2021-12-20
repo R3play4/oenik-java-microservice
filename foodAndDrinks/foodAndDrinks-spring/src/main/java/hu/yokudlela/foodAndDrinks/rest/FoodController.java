@@ -36,6 +36,4 @@ public class FoodController {
             @Parameter(description = "Étel neve", required = true) @RequestParam(name = "food", required = true) String food){
         return foodService.getByName(food);
     }
-
-
 }

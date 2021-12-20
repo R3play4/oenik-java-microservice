@@ -26,6 +26,17 @@ public class FoodRepository {
                 .build());
     }
     /**
+     * Összes étel lekérdezése
+     * @throws Exception nincs étel felvéve
+     * @return asztal
+     */
+    public List<Food> getAllFood() throws Exception{
+        if (FoodRepository.foodList.isEmpty())
+            throw new Exception("nincs étel felvéve");
+
+        return FoodRepository.foodList;
+    }
+    /**
      * Étel lekérdezés név alapján
      * @param name étel egyedi neve
      * @throws java.lang.NullPointerException Nincs ilyen nevű étel
@@ -48,5 +59,29 @@ public class FoodRepository {
                 .findFirst();
         return result;
     }
+
+    /**
+     * Új étel létesítése az étteremben
+     * @param pFood az új Étel neve
+     * @throws java.lang.Exception  ha már ilyen névvel létezik étel
+     */
+    public void add(Food pFood) throws Exception{
+        if(getOptionalByName(pFood.getName()).isEmpty()){
+            FoodRepository.foodList.add(pFood);
+        }
+        else throw new Exception();
+    }
+
+    /**
+     * Meglévő étel megszüntetése az ételapon
+     * @param pName az étel neve
+     * @return sikeres művelet esetén true;
+     */
+    public boolean delete(String pName){
+        Optional<Food> tmp = getOptionalByName(pName);
+        if(tmp.isEmpty()) return false;
+        return FoodRepository.foodList.remove(tmp.get());
+    }
+
 
 }
