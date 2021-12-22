@@ -1,8 +1,10 @@
 version: '3'
 services:
-  #  table:
+  #  food:
   #   image: food-and-drinks-1.0
-  #    ports:
+  #   environment:
+  #     - KEYCLOAK_AUTH_SERVER_URL=http://yokudlela:6080/auth
+  #   ports:
   #     - 8080:8080
   db:
     image: mariadb:10.1.34
