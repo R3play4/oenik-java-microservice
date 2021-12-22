@@ -17,6 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.List;
 
@@ -71,6 +75,7 @@ public class AdminController {
     @RolesAllowed("user")
     public Food add(
             Principal principal,
+            @Valid
             @Parameter(description = "Az új étel",required = true) @RequestBody(required = true) Food pData) throws Exception {
         KeycloakPrincipal kPrincipal = (KeycloakPrincipal) principal;
         AccessToken token = kPrincipal.getKeycloakSecurityContext().getToken();
@@ -97,6 +102,8 @@ public class AdminController {
     @DeleteMapping(path = "/delete/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void delete(
             @Parameter(description = "Étel neve", required = true, example = "hús")
+            @NotEmpty(message = "error.food.name.notset")
+            @NotBlank(message = "error.food.name.notset")
             @PathVariable(name = "name", required = true) String pId) {
         foodService.delete(pId);
     }

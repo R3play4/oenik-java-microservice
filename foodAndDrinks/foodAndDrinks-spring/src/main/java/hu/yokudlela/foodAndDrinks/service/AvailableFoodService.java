@@ -1,9 +1,7 @@
-package hu.yokudlela.foodAndDrinks.store.service;
+package hu.yokudlela.foodAndDrinks.service;
 
 import hu.yokudlela.foodAndDrinks.datamodel.Food;
 import hu.yokudlela.foodAndDrinks.store.FoodRepository;
-
-import java.util.List;
 
 public class AvailableFoodService {
     FoodRepository foodRepository = new FoodRepository();
