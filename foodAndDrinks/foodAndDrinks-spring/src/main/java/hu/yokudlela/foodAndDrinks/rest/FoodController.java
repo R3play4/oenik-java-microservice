@@ -2,6 +2,7 @@ package hu.yokudlela.foodAndDrinks.rest;
 
 import hu.yokudlela.foodAndDrinks.datamodel.Food;
 import hu.yokudlela.foodAndDrinks.store.FoodRepository;
+import hu.yokudlela.foodAndDrinks.store.IFoodRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,7 +24,7 @@ import java.util.List;
 public class FoodController {
 
     @Autowired
-    private FoodRepository foodService;
+    private IFoodRepository foodService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés",
@@ -34,6 +35,6 @@ public class FoodController {
     @GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public Food getFood(
             @Parameter(description = "Étel neve", required = true) @RequestParam(name = "food", required = true) String food){
-        return foodService.getByName(food);
+        return foodService.findByName(food);
     }
 }

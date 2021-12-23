@@ -1,7 +1,9 @@
 package hu.yokudlela.foodAndDrinks.rest;
 
 import hu.yokudlela.foodAndDrinks.datamodel.Food;
+import hu.yokudlela.foodAndDrinks.service.BusinessException;
 import hu.yokudlela.foodAndDrinks.store.FoodRepository;
+import hu.yokudlela.foodAndDrinks.store.IFoodRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -32,7 +34,7 @@ public class AdminController {
 
 
     @Autowired
-    FoodRepository foodService;
+    IFoodRepository foodService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "A keresett étel",
@@ -46,7 +48,7 @@ public class AdminController {
     public Food getByName(
             @Parameter(description="Étel neve", required = true, example = "hús")
             @PathVariable(name = "name", required = true) String pId) throws Exception {
-        return foodService.getByName(pId);
+        return foodService.findByName(pId);
     }
 
 
@@ -81,7 +83,7 @@ public class AdminController {
         AccessToken token = kPrincipal.getKeycloakSecurityContext().getToken();
         AccessToken.Access customClaims = token.getResourceAccess("account");
         System.out.println("ROLES:"+customClaims.getRoles());
-        foodService.add(pData);
+        foodService.save(pData);
         return pData;
     }
 
@@ -105,6 +107,12 @@ public class AdminController {
             @NotEmpty(message = "error.food.name.notset")
             @NotBlank(message = "error.food.name.notset")
             @PathVariable(name = "name", required = true) String pId) {
-        foodService.delete(pId);
+        Food tmp = foodService.findByName(pId);
+        if(tmp!=null){
+            foodService.delete(tmp);
+        }
+        else{
+            throw new BusinessException("food.notexist");
+        }
     }
 }
