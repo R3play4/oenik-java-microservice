@@ -1,11 +1,21 @@
 version: '3'
 services:
-  #  food:
-  #   image: food-and-drinks-1.0
-  #   environment:
-  #     - KEYCLOAK_AUTH_SERVER_URL=http://yokudlela:6080/auth
-  #   ports:
-  #     - 8080:8080
+  food:
+     image: 83210426/food-and-drinks:latest
+     environment:
+       - KEYCLOAK_AUTH_SERVER_URL=http://yokudlela:6080/auth
+       - SPRING_LIQUIBASE_ENABLED=true
+       - SPRING_DATASOURCE_URL=jdbc:mysql://yokudlela:3306/service_food?useUnicode=true&characterEncoding=UTF-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+     ports:
+       - 8080:8080
+     depends_on:
+       db:
+         condition: service_healthy
+    logging:
+       driver: gelf
+       options:
+          gelf-address: "udp://yokudlela:12201"
+
   db:
     image: mariadb:10.1.34
     environment:
@@ -18,6 +28,8 @@ services:
       - '3306:3306'
     restart: on-failure
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - ${PWD}/../../disks/sql:/var/lib/mysql
       - "${PWD}/init-db/iam.sql:/docker-entrypoint-initdb.d/1.sql:ro"
       - "${PWD}/init-db/food-service.sql:/docker-entrypoint-initdb.d/2.sql:ro"
@@ -43,10 +55,68 @@ services:
       DB_PORT: 3306
       KEYCLOAK_IMPORT: /tmp/example-realm.json
     volumes:
-      - ${PWD}/realm-export.json:/tmp/example-realm.json
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "${PWD}/realm-export.json:/tmp/example-realm.json"
     depends_on:
       db:
         condition: service_healthy
     links:
       - db
+    # MongoDB: https://hub.docker.com/_/mongo/
+  mongo:
+     image: mongo:4.2
+     volumes:
+       - ${PWD}/../../disks/mongo:/data/db
+  #      networks:
+  #        - graylog
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ${PWD}/../../disks/elastic:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+#      networks:
+#        - graylog
+
+  graylog:
+    image: graylog/graylog:4.2
+    environment:
+      # CHANGE ME (must be at least 16 characters)!
+      - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
+      # Password: admin
+      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://yokudlela:9000/
+    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+    #      networks:
+    #        - graylog
+    #      restart: always
+    depends_on:
+      - mongo
+      - elasticsearch
+    ports:
+      # Graylog web interface and REST API
+      - 9000:9000
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+#  networks:
+#    graylog:
+#      driver: bridge

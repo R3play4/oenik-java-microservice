@@ -16,6 +16,7 @@ import org.keycloak.KeycloakPrincipal;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @RestController()
 @RequestMapping(path = "/admin")
-
+@Validated
 public class AdminController {
 
 
