@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode()
@@ -21,7 +22,7 @@ import javax.validation.constraints.Size;
 @Entity
 @javax.persistence.Table(name = "rfood")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Food {
+public class Food implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "Sikertelen lekérdezés",
                     content = { @Content(mediaType = "application/json") })
     })
+    @Cacheable(cacheNames = "foodbyid", key = "#pId")
     @Operation(summary = "Asztal lekérdezés név alapján")
     @GetMapping(path = "/getbyname/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Food getByName(
