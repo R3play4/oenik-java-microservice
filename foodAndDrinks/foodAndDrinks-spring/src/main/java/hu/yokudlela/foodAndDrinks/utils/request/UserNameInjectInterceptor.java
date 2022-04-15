@@ -10,7 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import static hu.yokudlela.foodAndDrinks.utils.logging.CustomRequestLoggingFilter.REQUEST_ID;
-import static hu.yokudlela.foodAndDrinksutils.logging.CustomRequestLoggingFilter.USER_ID;
+import static hu.yokudlela.foodAndDrinks.utils.logging.CustomRequestLoggingFilter.USER_ID;
 
 /**
  * @author krisztian
