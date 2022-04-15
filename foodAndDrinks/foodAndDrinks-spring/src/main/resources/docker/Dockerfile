@@ -4,7 +4,7 @@ FROM openjdk:11
 ENV LANG C.UTF-8
 
 RUN mkdir -p /opt
-ADD C:\OE NIK\OENIK_II\2022-1\microservices\oenik-java-microservice\foodAndDrinks\foodAndDrinks-spring\target\foodAndDrinks-spring.jar /opt/foodAndDrinks-spring.jar
+ADD ./oenik-java-microservice/foodAndDrinks/foodAndDrinks-spring/target/foodAndDrinks-spring.jar /opt/foodAndDrinks-spring.jar
 
 
 EXPOSE 8080
