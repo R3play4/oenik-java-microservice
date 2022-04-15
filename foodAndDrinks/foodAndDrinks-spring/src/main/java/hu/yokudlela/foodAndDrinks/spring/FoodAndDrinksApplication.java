@@ -1,6 +1,7 @@
 package hu.yokudlela.foodAndDrinks.spring;
 
 import hu.yokudlela.foodAndDrinks.datamodel.Food;
+import hu.yokudlela.foodAndDrinks.utils.request.RequestBean;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -11,15 +12,14 @@ import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.jboss.logging.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -73,12 +73,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {
-        "hu.foodAndDrinks.table.service",
-        "hu.foodAndDrinks.table.rest",
-        "hu.foodAndDrinks.table.utils.request",
-        "hu.foodAndDrinks.table.utils.logging"
+        "hu.yokudlela.foodAndDrinks.service",
+        "hu.yokudlela.foodAndDrinks.rest",
+        "hu.yokudlela.foodAndDrinks.utils.request",
+        "hu.yokudlela.foodAndDrinks.utils.logging"
 })
-@EnableJpaRepositories("hu.foodAndDrinks.table.store")
+@EnableJpaRepositories("hu.yokudlela.foodAndDrinks.store")
 @EntityScan("hu.yokudlela.foodAndDrinks.datamodel")
 @SpringBootApplication
 @Import(ValidationRestDataExceptionHandler.class)
@@ -96,5 +96,19 @@ public class FoodAndDrinksApplication {
                 registry.addMapping("/**");
             }
         };
+    }
+
+    @Bean("requestScopedBean")
+    @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public RequestBean requestBean() {
+        MDC.put("application", "2");
+        MDC.put("host", "3");
+        return new RequestBean();
+    }
+
+    @Bean("applicationContextProvider")
+    public ApplicationContextProvider createApplicationContextProvider() {
+
+        return new ApplicationContextProvider();
     }
 }

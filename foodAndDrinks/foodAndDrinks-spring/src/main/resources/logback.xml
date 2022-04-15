@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <conversionRule conversionWord="requestId" converterClass="hu.yokudlela.table.utils.logging.RequestIdMessageConverter" />
-    <conversionRule conversionWord="userId" converterClass="hu.yokudlela.table.utils.logging.UserIdMessageConverter" />
+    <conversionRule conversionWord="requestId" converterClass="hu.yokudlela.foodAndDrinks.utils.logging.RequestIdMessageConverter" />
+    <conversionRule conversionWord="userId" converterClass="hu.yokudlela.foodAndDrinks.utils.logging.UserIdMessageConverter" />
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
